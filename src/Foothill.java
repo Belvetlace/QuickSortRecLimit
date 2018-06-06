@@ -2,17 +2,19 @@ import cs_1c.FHsort;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
 
 public class Foothill
 {
+   private static ArrayList<Long>[] times;
 
    public static void main(String[] args)
    {
-      final int[] ARRAY_SIZE = {20000, 50000, 100000, 150000};
-              //200000, 500000, 1000000, 1500000};
+      final int[] ARRAY_SIZE = {20000, 50000, 100000, 150000,//};
+              200000, 350000, 500000, 1000000, 1500000};
       int randomInt, recLimit;
-      ArrayList<Long>[] times = new ArrayList[ARRAY_SIZE.length];
+      times = new ArrayList[ARRAY_SIZE.length];
 
       for (int i = 0; i < ARRAY_SIZE.length; i++)
       {
@@ -25,9 +27,9 @@ public class Foothill
             arrayOfInts[k] = randomInt;
          }
          for( recLimit = 2; recLimit <= 300; recLimit += 2)
-            times[i].add(timeSort(recLimit, arrayOfInts.clone()));
+            times[i].add(timeSort(recLimit,
+                    Arrays.copyOf(arrayOfInts, arrayOfInts.length)));
       }
-
 
    }
 
@@ -45,9 +47,14 @@ public class Foothill
       stopTime = System.nanoTime();   // ------------------- stop
       elapsedTime = stopTime - startTime;
       System.out.println(String.format(
-              "Elapsed Time: %8s seconds. Reclimit: %d",
+              "Elapsed Time: %8s seconds. RecLimit: %d",
               tidy.format( elapsedTime / 1e9), recLimit));
       return elapsedTime;
+   }
+
+   public static ArrayList<Long>[] getTimes()
+   {
+      return times;
    }
 }
 
@@ -55,8 +62,7 @@ public class Foothill
       Investigate all recursion limits from 2 to 300 in steps of 2: 2, 4, 6, 8
 
       Run them on different size arrays from 20,000 up to the largest you can
-      get in your computer
-      (you should be able to get it up to close to 1 million or more).
+      get in your computer (to close to 1 million or more).
 
       Provide a table that summarizes the results
       - you don't have to show every recursion limit value
