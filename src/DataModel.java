@@ -29,15 +29,13 @@ public class DataModel
             times[i].add(timeSort(recLimit,
                     Arrays.copyOf(arrayOfInts, arrayOfInts.length)));
       }
+      printTable(times);
       return times;
    }
 
    private long timeSort(int recLimit, Integer[] array)
    {
       long startTime, stopTime, elapsedTime;
-      NumberFormat tidy = NumberFormat.getInstance(Locale.US);
-      tidy.setMaximumFractionDigits(4);
-
       FHsort.setRecursionLimit(recLimit);
 
       startTime = System.nanoTime();  // ------------------ start
@@ -48,6 +46,27 @@ public class DataModel
       return elapsedTime;
    }
 
+   private void printTable(ArrayList<Long>[] times)
+   {
+      NumberFormat tidy = NumberFormat.getInstance(Locale.US);
+      tidy.setMaximumFractionDigits(4);
+      System.out.print(String.format("%-13s", "Array Size:"));
+      for (int aARRAY_SIZE : ARRAY_SIZE)
+      {
+         System.out.print(String.format("  %,-10d", aARRAY_SIZE));
+      }
+      System.out.println();
+      for (int recLimit = 2; recLimit <= 300; recLimit += 2)
+      {
+         System.out.print(String.format("RecLimit: %3d", recLimit));
+         for (int i = 0; i < ARRAY_SIZE.length; i++)
+         {
+            System.out.print(String.format("  %-10s",
+                    tidy.format(times[i].get(recLimit/2-1) / 1e9)));
+         }
+         System.out.println();
+      }
+   }
    public int[] getARRAY_SIZE()
    {
       return ARRAY_SIZE;

@@ -8,17 +8,17 @@ import java.util.Locale;
 public class Foothill
 {
    private static ArrayList<Long>[] times;
+   private final static int[] ARRAY_SIZE = {20000, 50000, 100000, 150000};
+           //200000, 350000, 500000, 1000000, 1500000};
 
    public static void main(String[] args)
    {
-      final int[] ARRAY_SIZE = {20000, 50000, 100000, 150000,//};
-              200000, 350000, 500000, 1000000, 1500000};
+
       int randomInt, recLimit;
       times = new ArrayList[ARRAY_SIZE.length];
 
       for (int i = 0; i < ARRAY_SIZE.length; i++)
       {
-         System.out.println("\nArray size: " + ARRAY_SIZE[i]);
          times[i] = new ArrayList<>();
          Integer[] arrayOfInts = new Integer[ARRAY_SIZE[i]];
          for (int k = 0; k < ARRAY_SIZE[i]; k++)
@@ -30,15 +30,35 @@ public class Foothill
             times[i].add(timeSort(recLimit,
                     Arrays.copyOf(arrayOfInts, arrayOfInts.length)));
       }
+      printTable();
+   }
 
+   private static void printTable()
+   {
+      NumberFormat tidy = NumberFormat.getInstance(Locale.US);
+      tidy.setMaximumFractionDigits(4);
+      System.out.print(String.format("%-13s", "Array Size:"));
+      for (int aARRAY_SIZE : ARRAY_SIZE)
+      {
+         System.out.print(String.format("  %,-10d", aARRAY_SIZE));
+      }
+      System.out.println();
+      for (int recLimit = 2; recLimit <= 300; recLimit += 2)
+      {
+         System.out.print(String.format("RecLimit: %3d", recLimit));
+         for (int i = 0; i < ARRAY_SIZE.length; i++)
+         {
+            System.out.print(String.format("  %-10s",
+                    tidy.format(times[i].get(recLimit/2-1) / 1e9)));
+         }
+         System.out.println();
+      }
    }
 
    private static long timeSort(int recLimit,
                                     Integer[] array)
    {
       long startTime, stopTime, elapsedTime;
-      NumberFormat tidy = NumberFormat.getInstance(Locale.US);
-      tidy.setMaximumFractionDigits(4);
 
       FHsort.setRecursionLimit(recLimit);
 
@@ -46,9 +66,7 @@ public class Foothill
       FHsort.quickSort(array);
       stopTime = System.nanoTime();   // ------------------- stop
       elapsedTime = stopTime - startTime;
-      System.out.println(String.format(
-              "Elapsed Time: %8s seconds. RecLimit: %d",
-              tidy.format( elapsedTime / 1e9), recLimit));
+
       return elapsedTime;
    }
 
@@ -59,17 +77,10 @@ public class Foothill
 }
 
 /*
-      Investigate all recursion limits from 2 to 300 in steps of 2: 2, 4, 6, 8
+Comment on the results, describing the range that seems to be minimal
+(and flat)
 
-      Run them on different size arrays from 20,000 up to the largest you can
-      get in your computer (to close to 1 million or more).
+Run-------------------------
 
-      Provide a table that summarizes the results
-      - you don't have to show every recursion limit value
-      - if there is no change in 10 consecutive values,
-      pick one to represent that value.
-
-      Comment on the results, describing the range that seems to be minimal
-      (and flat)
 
  */
